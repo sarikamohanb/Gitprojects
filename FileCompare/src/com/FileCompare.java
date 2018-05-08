@@ -24,16 +24,19 @@ public class FileCompare {
 
 	public static void main(String[] args) {
 		PropertyConfigurator.configure("Logging.properties");
-
-		logger.info("this is a information log message");
-
 		listAllTheFiles(directory1);
 		String newFile = "my data.txt";
-		createFile(newFile);
+		boolean status=createFile(newFile);
+		if(status) {
+			logger.info("file with name "+newFile+" created");
+		}
 		String fileName = "my data.txt";
 		openFile(fileName);
 		String appendFile = "my data.txt";
-		appendFile(appendFile);
+		boolean status1=appendFile(appendFile);
+		if(status1) {
+			logger.info("file with name "+appendFile+" got edited");
+		}
 		String historyFile = "my data.txt";
 		historyOfEdits(historyFile);
 
@@ -50,7 +53,8 @@ public class FileCompare {
 
 	}
 
-	private static void createFile(String newFile) {
+	private static boolean createFile(String newFile) {
+		boolean status=false;
 		String path = directory1 + newFile;
 		try {
 			String content = "This is the content to write into create file";
@@ -61,6 +65,7 @@ public class FileCompare {
 			if (!file.exists()) {
 				file.createNewFile();
 				file1.createNewFile();
+				status=true;
 				System.out.println("\nnew file with name " + path + " created");
 			} else {
 				System.out.println("\nfile cannot be created: " + path + " already exists");
@@ -78,6 +83,7 @@ public class FileCompare {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		return status;
 	}
 
 	private static void openFile(String fileName) {
@@ -92,7 +98,8 @@ public class FileCompare {
 
 	}
 
-	private static void appendFile(String appendFile) {
+	private static boolean appendFile(String appendFile) {
+		boolean status=false;
 		String pathName = directory1 + appendFile;
 		String pathName2 = directory2 + appendFile;
 		String appendData = "";
@@ -108,10 +115,12 @@ public class FileCompare {
 			}
 			try (PrintWriter output = new PrintWriter(new FileWriter(pathName, true))) {
 				output.printf("%s\r\n", appendData);
+				status=true;
+				output.close();
 				PrintWriter output2 = new PrintWriter(new FileWriter(pathName2, true));
 				String historyContent = sdf.format(file.lastModified()) + "  new line added as " + appendData;
 				output2.printf("%s\r\n", historyContent);
-				output.close();
+				
 				output2.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -119,6 +128,7 @@ public class FileCompare {
 		} else {
 			System.out.println("file with name " + appendFile + " does not exists in the directory ");
 		}
+		return status;
 
 	}
 
