@@ -11,14 +11,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import org.apache.log4j.Logger;
 import java.util.stream.Stream;
+
+import org.apache.log4j.PropertyConfigurator;
 
 public class FileCompare {
 	static String directory1 = "/Users/MY PC/Desktop/sarika/";
 	static String directory2 = "/Users/MY PC/Desktop/modifier data/";
 	static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	static final Logger logger = Logger.getLogger(FileCompare.class.getName());
 
 	public static void main(String[] args) {
+		PropertyConfigurator.configure("Logging.properties");
+
+		logger.info("this is a information log message");
+
 		listAllTheFiles(directory1);
 		String newFile = "my data.txt";
 		createFile(newFile);
